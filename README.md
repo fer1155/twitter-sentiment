@@ -8,9 +8,8 @@ To run download the repository, then in the root of the project (console) write 
 
 Endpoints to execute (all whit the method get):
 
-http://localhost:5001/sentiment-data
-http://localhost:5002/proccess-data
-http://localhost:5003/download-market-data
-http://localhost:5004/build-portfolio
-http://localhost:5005/plot
-
+  1) http://localhost:5001/sentiment-data
+  2) http://localhost:5002/proccess-data
+  3) http://localhost:5003/download-market-data
+  4) http://localhost:5004/build-portfolio
+  5) http://localhost:5005/plot
