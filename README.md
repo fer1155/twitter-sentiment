@@ -3,8 +3,8 @@ A project to the 'infraestructuras paralelas y distribuidas 'class, using flask,
 
 To run download the repository, then in the root of the project (console) write this:
   
-  docker-compose build
-  docker-compose up
+  1) docker-compose build
+  2) docker-compose up
 
 Endpoints to execute (all whit the method get):
 
