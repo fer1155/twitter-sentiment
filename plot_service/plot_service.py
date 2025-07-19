@@ -10,7 +10,7 @@ app = Flask(__name__)
 matplotlib.use('Agg') # nuevo (# Para poder graficar sin interfaz)
 plt.style.use('ggplot')
 
-#ray.init(ignore_reinit_error=True) # Inicia Ray (usa todos los núcleos disponibles)
+#Get the portfolio of 'portfolio_service' microservice  
 def get_portfolio_df(): 
    datosEnJson = requests.get("http://portfolio:5000/build-portfolio")
    portfolio_df = pd.read_json(datosEnJson.text)
@@ -19,7 +19,6 @@ def get_portfolio_df():
    return portfolio_df
 
 #Plot (graficar) the two columns of the portfolio in a graph
-#@ray.remote
 def plotPortfolio(portfolio_dff):
    portfolios_cumulative_return = np.exp(np.log1p(portfolio_dff).cumsum()).sub(1)
    portfolios_cumulative_return.plot(figsize=(16,6))
@@ -30,6 +29,7 @@ def plotPortfolio(portfolio_dff):
    plt.close()
    return "retorno_estrategia.png"
 
+#Define the endpoint to plot the portfolio 
 @app.route("/plot", methods=["GET"])
 def plot():
    try:

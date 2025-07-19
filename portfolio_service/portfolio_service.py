@@ -8,17 +8,17 @@ import requests
 ray.init(ignore_reinit_error=True) # Inicia Ray (usa todos los núcleos disponibles)
 app = Flask(__name__)
 
-#Get data of '' microservice  
+#Get data of 'process data' microservice  
 def get_fixed_dates(): 
    datosEnJson = requests.get("http://aggregator:5000/proccess-data")
    fixed_dates = datosEnJson.json()
    return fixed_dates
 
-#Get data of '' microservice  
+#Get data of 'market data' microservice  
 def get_prices_df(): 
    datosEnJson = requests.get("http://marketdata:5000/download-market-data")
    prices_df = pd.read_json(datosEnJson.text)
-
+ 
    # Expandir la columna 'data' si es una lista o una serie de dicts
    if 'data' in prices_df.columns:
        df = pd.json_normalize(prices_df['data'])  # convierte los dicts en columnas
@@ -32,7 +32,6 @@ def get_prices_df():
    return df
 
 #Build a monthly portfolio with the stocks with the best engagement on Twitter
-#@ray.remote  
 def buildMonthlyPortfolio(prices_df, fixed_dates):
    returns_df = np.log(prices_df['close']).diff().dropna()
    portfolio_df = pd.DataFrame()
@@ -44,7 +43,6 @@ def buildMonthlyPortfolio(prices_df, fixed_dates):
    return portfolio_df
 
 #Update the portfolio with a new column 'nasdaq_return', previusly download
-#@ray.remote
 def updatePortfolio(portfolio_df):
    qqq_df = yf.download(tickers='QQQ', start='2021-01-01', end='2023-03-01')
    qqq_ret = np.log(qqq_df['Close']).diff()
@@ -55,6 +53,7 @@ def updatePortfolio(portfolio_df):
    portfolio_df = portfolio_df.dropna() 
    return portfolio_df
 
+#Define the endpoint to build a portfolio as dataframe
 @app.route("/build-portfolio", methods=["GET"])
 def build_portfolio_service():
    try:

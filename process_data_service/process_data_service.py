@@ -32,6 +32,8 @@ def makeDictionary(filtered_df):
     fixed_dates[d.strftime('%Y-%m-%d')] = symbols
    return fixed_dates
 
+#Define the endpoint to process the sentiment data with ray (to make the process parallel) and filter it, then 
+#create a dictionary with the answer.
 @app.route("/proccess-data", methods=["GET"])
 def make_fixed_dates():
    try:

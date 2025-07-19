@@ -42,6 +42,8 @@ def downloadHistoricalPrices(symbol):
    
    return result_df
 
+#Define the endpoint to download the market data with ray (to make the process parallel) and filter it, then 
+#return a dataframe with the processed data.
 @app.route("/download-market-data", methods=["GET"])
 def get_market_data():
    try:
