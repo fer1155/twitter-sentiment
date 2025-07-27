@@ -35,8 +35,6 @@ services:
     container_name: plot_service
     ports:
       - "5005:5000"
-    environment:
-      - PYTHONUNBUFFERED=1
     depends_on:
       - portfolio
   
