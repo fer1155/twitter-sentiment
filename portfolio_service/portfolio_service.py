@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 #Get data of 'process data' microservice  
 def get_fixed_dates(): 
-   datosEnJson = requests.get("http://aggregator:5000/proccess-data")
+   datosEnJson = requests.get("http://process:5000/proccess-data")
    fixed_dates = datosEnJson.json()
    return fixed_dates
 
