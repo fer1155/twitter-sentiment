@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 import ray
 from flask import Flask, jsonify
@@ -60,6 +61,55 @@ def make_fixed_dates():
    
    except Exception as e:
         return jsonify({"error": str(e)}), 500
-   
+
+@app.route("/metrica", methods=["GET"])
+def get_metrica():
+   try:
+      # Medir tiempo de procesamiento paralelo
+      start_time_parallel = time.time()
+      result_parallel = requests.get("http://process:5000/proccess-data")
+      end_time_parallel = time.time()
+      parallel_time = end_time_parallel - start_time_parallel
+
+      # Medir tiempo de procesamiento secuencial
+      start_time_sequential = time.time()
+      sentiment_data = get_sentiment_df()
+      result_sequential = ejecuion_secuencial(sentiment_data)
+      end_time_sequential = time.time()
+      sequential_time = end_time_sequential - start_time_sequential
+
+      return jsonify({
+         "performance_comparison": {
+               "parallel_processing": {
+                  "time_seconds": round(parallel_time, 4),
+                  "method": "Ray parallel processing"
+               },
+               "sequential_processing": {
+                  "time_seconds": round(sequential_time, 4),
+                  "method": "Sequential processing"
+               }
+         }
+      })
+   except Exception as e:
+      return jsonify({"error": f"Processing error: {str(e)}"}), 500
+
+def ejecuion_secuencial(sentiment_df):
+   try:
+      aggragated_df = (sentiment_df.reset_index('symbol').groupby([pd.Grouper(freq='ME'), 'symbol'])
+                    [['engagement_ratio']].mean())
+      aggragated_df['rank'] = (aggragated_df.groupby(level=0)['engagement_ratio']
+                         .transform(lambda x: x.rank(ascending=False)))
+      filtered_df = aggragated_df[aggragated_df['rank']<6].copy()
+      filtered_df = filtered_df.reset_index(level=1)
+      filtered_df.index = filtered_df.index+pd.DateOffset(1)
+      filtered_df = filtered_df.reset_index().set_index(['date', 'symbol'])
+      dates = filtered_df.index.get_level_values('date').unique().tolist()
+      fixed_dates = {}
+      for d in dates:
+         fixed_dates[d.strftime('%Y-%m-%d')] = filtered_df.xs(d, level=0).index.tolist()
+      return fixed_dates
+   except Exception as e:
+      return jsonify({"error": f"Processing error: {str(e)}"}), 500
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)

@@ -3,6 +3,7 @@ import yfinance as yf
 import ray
 from flask import Flask, jsonify
 import requests
+import time
 
 ray.init(ignore_reinit_error=True) # Inicia Ray (usa todos los núcleos disponibles)
 app = Flask(__name__)
@@ -68,6 +69,26 @@ def get_market_data():
       return jsonify({"data": pricesDf.to_dict('records'),})
    except Exception as e:
       return jsonify({"error": str(e)}), 500
-   
+
+@app.route("/metrica", methods=["GET"])
+def get_metrica():
+   try:
+      # Medir tiempo de procesamiento paralelo
+      start_time_parallel = time.time()
+      result_parallel = requests.get("http://marketdata:5000/download-market-data")
+      end_time_parallel = time.time()
+      parallel_time = end_time_parallel - start_time_parallel
+
+      return jsonify({
+         "performance_comparison": {
+               "parallel_processing": {
+                  "time_seconds": round(parallel_time, 4),
+                  "method": "Ray parallel processing"
+               }
+         }
+      })
+   except Exception as e:
+      return jsonify({"error": f"Processing error: {str(e)}"}), 500
+      
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)
