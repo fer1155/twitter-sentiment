@@ -49,3 +49,12 @@ services:
       - plot
     ports:
       - "5000:5000"
+  
+  frontend:
+    build: ./frontend
+    container_name: frontend_service
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+
