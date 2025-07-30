@@ -50,10 +50,10 @@ Este sistema utiliza una arquitectura de microservicios distribuidos para analiz
 
 ### Servicios de Benchmarking
 
-- **Benchmark Completo** (`localhost:5002/metrica`)
+- **Benchmark Process data service ** (`localhost:5002/metrica`)
   - Compara rendimiento paralelo vs. secuencial
   
-- **Benchmark Paralelo** (`localhost:5003/metrica`)
+- **Benchmark Market data service ** (`localhost:5003/metrica`)
   - Mide únicamente tiempo de procesamiento paralelo
 
 ##  Microservicios Detallados
@@ -154,10 +154,10 @@ curl http://localhost:5000/plot
 ### Benchmarking
 
 ```bash
-# Comparación completa (paralelo vs secuencial)
+# Comparación Process data service (paralelo vs secuencial)
 curl http://localhost:5002/metrica
 
-# Solo medición paralela
+# Solo medición Market data service
 curl http://localhost:5003/metrica
 ```
 
@@ -188,15 +188,13 @@ curl http://localhost:5003/metrica
 - **Datos de Twitter**: `sentiment_data.csv` (incluido en `/data`)
 - **Datos financieros**: Yahoo Finance vía yfinance
 - **Período de análisis**: Enero 2021 - Marzo 2023
-- **Benchmark**: Nasdaq QQQ como índice de referencia
-
-## 🔧 Configuración Avanzada
+- Nasdaq QQQ como índice de referencia
 
 ### Puertos utilizados:
 - Frontend: 3000
 - API Principal: 5000
-- Benchmark Completo: 5002
-- Benchmark Paralelo: 5003
+- Benchmark: 5002
+- Benchmark: 5003
 
 ##  Flujo de Datos
 
@@ -219,19 +217,19 @@ Este proyecto fue desarrollado para la clase de "Infraestructuras Paralelas y Di
 
 ##  Equipo de Desarrollo
 
-| Integrante | Código Estudiantil | Rol |
-|------------|-------------------|-----|
-| **Pablo Esteban Becerra** | 2243506 | Desarrollador |
-| **Fernando Cardona Giraldo** | 2241381 | Desarrollador |
-| **Juan Manuel Vargas** | 2438185 | Desarrollador |
+| Integrante | Código Estudiantil | 
+|------------|-------------------|
+| **Pablo Esteban Becerra** | 2243506 | 
+| **Fernando Cardona Giraldo** | 2241381 | 
+| **Juan Manuel Vargas** | 2438185 | 
 
 ---
 
 ### 🎓 Información Académica
 - **Institución:** Universidad del Valle
 - **Programa:** Ingeniería de Sistemas
-- **Materia:** Computación Paralela y Distribuida
-- **Periodo Académico:** 2024-2
+- **Materia:** Infraestructuras Paralelas y Distribuidas
+- **Periodo Académico:** 2025-1
 
 ---
 
