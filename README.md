@@ -21,31 +21,26 @@ Este sistema utiliza una arquitectura de microservicios distribuidos para analiz
 │ Client  │───▶│ API Gateway │───▶│ ┌─────────────────────────────────────┐ │
 │         │    │             │    │ │           Microserviices            │ │
 └─────────┘    └─────────────┘    │ │                                     │ │
-                                  │ │ The lines indicate a dependency     │ │
-                                  │ │ relationship, which means that a    │ │
-                                  │ │ microservice depends on the data to │ │
-                                  │ │ generate new information.           │ │
-                                  │ │                                     │ │
                                   │ │ ┌─────────────────────────────────┐ │ │
                                   │ │ │     sentiment_data_service      │ │ │
                                   │ │ └─────────────────────────────────┘ │ │
-                                  │ │              │                      │ │
-                                  │ │              ▼                      │ │
+                                  │ │                                     │ │
+                                  │ │                                     │ │
                                   │ │ ┌─────────────────────────────────┐ │ │
                                   │ │ │      process_data_service       │ │ │
                                   │ │ └─────────────────────────────────┘ │ │
-                                  │ │              │                      │ │
-                                  │ │              ▼                      │ │
+                                  │ │                                     │ │
+                                  │ │                                     │ │
                                   │ │ ┌─────────────────────────────────┐ │ │
-                                  │ │ │      market_data_service        │◄┼─┤
+                                  │ │ │      market_data_service        │ │ │
                                   │ │ └─────────────────────────────────┘ │ │
-                                  │ │              │                      │ │
-                                  │ │              ▼                      │ │
+                                  │ │                                     │ │
+                                  │ │                                     │ │
                                   │ │ ┌─────────────────────────────────┐ │ │
-                                  │ │ │       portfolio_service         │◄┼─┤
+                                  │ │ │       portfolio_service         │ │ │
                                   │ │ └─────────────────────────────────┘ │ │
-                                  │ │              │                      │ │
-                                  │ │              ▼                      │ │
+                                  │ │                                     │ │
+                                  │ │                                     │ │
                                   │ │ ┌─────────────────────────────────┐ │ │
                                   │ │ │         plot_service            │ │ │
                                   │ │ └─────────────────────────────────┘ │ │
@@ -213,19 +208,31 @@ Market Data (yfinance) ← Market Service ← Portfolio Service
                                         Plot Service
 ```
 
-##  Características de Rendimiento
-
-- **Procesamiento paralelo**: Aceleración significativa con Ray
-- **Arquitectura distribuida**: Escalabilidad horizontal
-- **Caché inteligente**: Optimización de consultas repetidas
-- **Filtrado de calidad**: Solo tweets con alta relevancia
-
 ##  Contribución
 
 Este proyecto fue desarrollado para la clase de "Infraestructuras Paralelas y Distribuidas", demostrando la implementación práctica de:
 - Microservicios
 - Computación paralela
-- Análisis financiero cuantitativo
 - APIs RESTful
+
+---
+
+##  Equipo de Desarrollo
+
+| Integrante | Código Estudiantil | Rol |
+|------------|-------------------|-----|
+| **Pablo Esteban Becerra** | 2243506 | Desarrollador |
+| **Fernando Cardona Giraldo** | 2241381 | Desarrollador |
+| **Juan Manuel Vargas** | 2438185 | Desarrollador |
+
+---
+
+### 🎓 Información Académica
+- **Institución:** Universidad del Valle
+- **Programa:** Ingeniería de Sistemas
+- **Materia:** Computación Paralela y Distribuida
+- **Periodo Académico:** 2024-2
+
+---
 
 **Nota**: Asegúrate de que todos los contenedores estén ejecutándose antes de acceder al frontend o realizar llamadas a la API.
