@@ -50,10 +50,10 @@ Este sistema utiliza una arquitectura de microservicios distribuidos para analiz
 
 ### Servicios de Benchmarking
 
-- **Benchmark Process data service ** (`localhost:5002/metrica`)
+- ** Benchmark Process data service ** (`localhost:5002/metrica`)
   - Compara rendimiento paralelo vs. secuencial
   
-- **Benchmark Market data service ** (`localhost:5003/metrica`)
+- ** Benchmark Market data service ** (`localhost:5003/metrica`)
   - Mide únicamente tiempo de procesamiento paralelo
 
 ##  Microservicios Detallados
