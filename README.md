@@ -16,45 +16,42 @@ Este sistema utiliza una arquitectura de microservicios distribuidos para analiz
 
 ##  Arquitectura del Sistema
 
-### Microservicios
-
-1. **Sentiment Data Service** (`localhost:5000/sentiment`)
-   - **Propósito**: Procesamiento inicial de datos de sentimientos
-   - **Funciones**: 
-     - Carga y limpia `sentiment_data.csv`
-     - Calcula métricas de engagement (twitterComments/twitterLikes)
-     - Filtra tweets relevantes (>20 likes, >10 comentarios)
-   - **Salida**: JSON con fecha, símbolo, comentarios, likes y ratio de engagement
-
-2. **Process Data Service** (`localhost:5000/process`)
-   - **Propósito**: Ranking y selección de mejores acciones
-   - **Funciones**:
-     - Agrupa datos por mes
-     - Calcula promedios mensuales de engagement
-     - Genera ranking de las top 5 acciones por mes
-   - **Salida**: Diccionario JSON con las mejores acciones mensuales
-
-3. **Market Data Service** (`localhost:5000/market`)
-   - **Propósito**: Descarga de datos históricos del mercado
-   - **Funciones**:
-     - Obtiene precios históricos vía yfinance (2021-2023)
-     - Procesamiento paralelo con Ray
-   - **Salida**: JSON con datos de precios [fecha, ticker, precio_cierre]
-
-4. **Portfolio Service** (`localhost:5000/portfolio`)
-   - **Propósito**: Construcción y evaluación del portafolio
-   - **Funciones**:
-     - Calcula retornos logarítmicos
-     - Construye portafolio mensual con top acciones
-     - Compara con Nasdaq QQQ
-   - **Salida**: JSON con retornos del portafolio y Nasdaq
-
-5. **Plot Service** (`localhost:5000/plot`)
-   - **Propósito**: Visualización de resultados
-   - **Funciones**:
-     - Genera gráficos de retornos acumulados
-     - Comparación visual estrategia vs. mercado
-   - **Salida**: Imagen PNG
+```
+┌─────────┐    ┌─────────────┐    ┌─────────────────────────────────────────┐
+│ Client  │───▶│ API Gateway │───▶│ ┌─────────────────────────────────────┐ │
+│         │    │             │    │ │           Microserviices            │ │
+└─────────┘    └─────────────┘    │ │                                     │ │
+                                  │ │ The lines indicate a dependency     │ │
+                                  │ │ relationship, which means that a    │ │
+                                  │ │ microservice depends on the data to │ │
+                                  │ │ generate new information.           │ │
+                                  │ │                                     │ │
+                                  │ │ ┌─────────────────────────────────┐ │ │
+                                  │ │ │     sentiment_data_service      │ │ │
+                                  │ │ └─────────────────────────────────┘ │ │
+                                  │ │              │                      │ │
+                                  │ │              ▼                      │ │
+                                  │ │ ┌─────────────────────────────────┐ │ │
+                                  │ │ │      process_data_service       │ │ │
+                                  │ │ └─────────────────────────────────┘ │ │
+                                  │ │              │                      │ │
+                                  │ │              ▼                      │ │
+                                  │ │ ┌─────────────────────────────────┐ │ │
+                                  │ │ │      market_data_service        │◄┼─┤
+                                  │ │ └─────────────────────────────────┘ │ │
+                                  │ │              │                      │ │
+                                  │ │              ▼                      │ │
+                                  │ │ ┌─────────────────────────────────┐ │ │
+                                  │ │ │       portfolio_service         │◄┼─┤
+                                  │ │ └─────────────────────────────────┘ │ │
+                                  │ │              │                      │ │
+                                  │ │              ▼                      │ │
+                                  │ │ ┌─────────────────────────────────┐ │ │
+                                  │ │ │         plot_service            │ │ │
+                                  │ │ └─────────────────────────────────┘ │ │
+                                  │ └─────────────────────────────────────┘ │
+                                  └─────────────────────────────────────────┘
+```
 
 ### Servicios de Benchmarking
 
@@ -64,15 +61,52 @@ Este sistema utiliza una arquitectura de microservicios distribuidos para analiz
 - **Benchmark Paralelo** (`localhost:5003/metrica`)
   - Mide únicamente tiempo de procesamiento paralelo
 
+##  Microservicios Detallados
+
+### 1. Sentiment Data Service
+- **Endpoint**: `localhost:5000/sentiment`
+- **Propósito**: Procesamiento inicial de datos de sentimientos
+- **Funciones**: 
+  - Carga y limpia `sentiment_data.csv`
+  - Calcula métricas de engagement (twitterComments/twitterLikes)
+  - Filtra tweets relevantes (>20 likes, >10 comentarios)
+- **Salida**: JSON con fecha, símbolo, comentarios, likes y ratio de engagement
+
+### 2. Process Data Service
+- **Endpoint**: `localhost:5000/process`
+- **Propósito**: Ranking y selección de mejores acciones
+- **Funciones**:
+  - Agrupa datos por mes
+  - Calcula promedios mensuales de engagement
+  - Genera ranking de las top 5 acciones por mes
+- **Salida**: Diccionario JSON con las mejores acciones mensuales
+
+### 3. Market Data Service
+- **Endpoint**: `localhost:5000/market`
+- **Propósito**: Descarga de datos históricos del mercado
+- **Funciones**:
+  - Obtiene precios históricos vía yfinance (2021-2023)
+  - Procesamiento paralelo con Ray
+- **Salida**: JSON con datos de precios [fecha, ticker, precio_cierre]
+
+### 4. Portfolio Service
+- **Endpoint**: `localhost:5000/portfolio`
+- **Propósito**: Construcción y evaluación del portafolio
+- **Funciones**:
+  - Calcula retornos logarítmicos
+  - Construye portafolio mensual con top acciones
+  - Compara con Nasdaq QQQ
+- **Salida**: JSON con retornos del portafolio y Nasdaq
+
+### 5. Plot Service
+- **Endpoint**: `localhost:5000/plot`
+- **Propósito**: Visualización de resultados
+- **Funciones**:
+  - Genera gráficos de retornos acumulados
+  - Comparación visual estrategia vs. mercado
+- **Salida**: Imagen PNG
+
 ##  Instalación y Configuración
-
-### Prerrequisitos
-- Docker >= 20.10
-- Docker Compose >= 2.0
-- 4GB RAM recomendados
-- Conexión a internet (para descarga de datos financieros)
-
-### Instalación
 
 1. **Clonar el repositorio**
 ```bash
@@ -87,7 +121,7 @@ docker-compose build
 
 3. **Iniciar los servicios**
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 ## 💻 Uso del Sistema
@@ -161,20 +195,13 @@ curl http://localhost:5003/metrica
 - **Período de análisis**: Enero 2021 - Marzo 2023
 - **Benchmark**: Nasdaq QQQ como índice de referencia
 
-##  Configuración Avanzada
+## 🔧 Configuración Avanzada
 
 ### Puertos utilizados:
 - Frontend: 3000
 - API Principal: 5000
 - Benchmark Completo: 5002
 - Benchmark Paralelo: 5003
-
-### Variables de entorno (opcionales):
-```env
-# Configurar en docker-compose.yml si es necesario
-RAY_WORKERS=4  # Número de workers Ray
-DATA_PATH=/app/data  # Ruta de datos
-```
 
 ##  Flujo de Datos
 
@@ -193,12 +220,6 @@ Market Data (yfinance) ← Market Service ← Portfolio Service
 - **Caché inteligente**: Optimización de consultas repetidas
 - **Filtrado de calidad**: Solo tweets con alta relevancia
 
-##  Limitaciones Conocidas
-
-- Dependencia de conexión a internet para datos de Yahoo Finance
-- Tiempo de procesamiento inicial (~30 segundos para portafolio completo)
-- Dataset limitado al período 2021-2023
-
 ##  Contribución
 
 Este proyecto fue desarrollado para la clase de "Infraestructuras Paralelas y Distribuidas", demostrando la implementación práctica de:
@@ -206,11 +227,5 @@ Este proyecto fue desarrollado para la clase de "Infraestructuras Paralelas y Di
 - Computación paralela
 - Análisis financiero cuantitativo
 - APIs RESTful
-
-##  Licencia
-
-Proyecto académico - Ver archivo LICENSE para más detalles.
-
----
 
 **Nota**: Asegúrate de que todos los contenedores estén ejecutándose antes de acceder al frontend o realizar llamadas a la API.
